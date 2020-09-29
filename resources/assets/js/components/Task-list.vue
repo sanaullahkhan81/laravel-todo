@@ -7,9 +7,9 @@
                 <div class="field has-addons">
                     <div class="control is-expanded">
                         <input class="input" type="text" placeholder="New task" v-model="task.body">
-                        <label>Select Category:</label>
-                        <select class='input' v-model='categories'>
-                            <option value='0' >Select Categories</option>
+
+                        <select class='input' v-model="selected">
+                            <option value='' disabled >Select Category</option>
                             <option v-for='data in categories' :value='data.id'>{{ data.name }}</option>
                         </select>
                     </div>
@@ -58,9 +58,11 @@
                             <p v-if="task !== editingTask" @dblclick="editTask(task)" v-bind:title="message">
                                 {{ task.body }}
                             </p>
-                            <input class="input" v-if="task === editingTask" v-autofocus @keyup.enter="endEditing(task)" @blur="endEditing(task)" type="text" placeholder="New task" v-model="task.body" required>
 
+                            <input class="input" v-if="task === editingTask" v-autofocus @keyup.enter="endEditing(task)" @blur="endEditing(task)" type="text" placeholder="New task" v-model="task.body" required>
+                           <p>{{task.category }}</p>
                         </div>
+
                     </div>
                     <footer class="card-footer">
                         <a class="card-footer-item" v-on:click.prevent="deleteTask(task.id)">Delete</a>
@@ -85,6 +87,7 @@
         data() {
             return {
                 categories: '',
+                selected: '',
                 message: 'Double click for editing.',
                 list: [],
                 task: {
@@ -105,12 +108,11 @@
         methods: {
             getCategories: function(){
                 axios.get('getCategories')
-                    .then(function (response) {
-                        console.log(response.data)
-                        this.categories = response;
-                    }.bind(this));
-
+                    .then((response) => {
+                            this.categories= response.data.categories;
+                            });
             },
+
             fetchTaskList(archive = null) {
 
                 if (archive === null) {
@@ -135,7 +137,11 @@
             },
 
             createTask() {
-                axios.post('create_task', this.task).then(result => {
+                console.log(this.selected)
+                axios.post('create_task',  {
+                    task: this.task,
+                    category: this.selected
+                }).then(result => {
                     this.task.body = '';
                     this.fetchTaskList();
                 }).catch(err => {

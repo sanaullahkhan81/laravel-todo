@@ -11,7 +11,8 @@ class CategoriesController extends Controller
     public function index()
     {
 
-       return  Categories::get();
+       $categories =  Categories::get();
+        return response(['categories' => $categories], 200);
 
     }
 }

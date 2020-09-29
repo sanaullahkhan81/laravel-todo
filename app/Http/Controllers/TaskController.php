@@ -10,8 +10,10 @@ class TaskController extends Controller
 {
     public function index()
     {
-        $categories = Categories::get();
-        return Task::orderBy('id', 'desc')->get();
+        $task = Task::orderBy('id', 'desc')
+                    ->with('category')->get();
+
+        return $task;
     }
 
     public function archived()
@@ -21,11 +23,10 @@ class TaskController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'body' => 'required|max:500'
+        return Task::create([
+            'body' => $request->task['body'],
+            'category_id' => $request->category
         ]);
-
-        return Task::create(['body' => request('body')]);
     }
 
     public function edit(Request $request)

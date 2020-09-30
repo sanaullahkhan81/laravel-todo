@@ -12,7 +12,6 @@ class TaskController extends Controller
     {
         $task = Task::orderBy('id', 'desc')
                     ->with('category')->get();
-
         return $task;
     }
 
@@ -57,5 +56,12 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $task->forceDelete();
+    }
+
+    public function update(Request $request, $task_id)
+    {
+        $category_id = $request->category_id;
+        Task::where('id', $task_id)
+            ->update(['category_id' => $category_id]);
     }
 }

@@ -13,11 +13,12 @@
                             <option v-for='data in categories' :value='data.id'>{{ data.name }}</option>
                         </select>
                     </div>
-                    <div class="control">
-                        <a class="button is-primary" @click="createTask()">
-                            Add task
-                        </a>
-                    </div>
+
+                </div>
+                <div class="control">
+                    <a class="button is-primary" @click="createTask()">
+                        Add task
+                    </a>
                 </div>
 
                 <div class="tabs is-centered">
@@ -45,6 +46,7 @@
                         </p>
                         <a href="#" class="card-header-icon" aria-label="more options"
                             v-on:click.prevent="archiveTask(task.id)">
+                            Archive/Unarchive
                             <span class="icon">
                                 <i class="fa " :class="{'fa-square-o': !task.archive,
                                                         check: !task.archive,
@@ -55,12 +57,19 @@
                     </header>
                     <div class="card-content">
                         <div class="content">
-                            <p v-if="task !== editingTask" @dblclick="editTask(task)" v-bind:title="message">
+                            <p class="editor" v-if="task !== editingTask" @dblclick="editTask(task)" v-bind:title="message">
                                 {{ task.body }}
                             </p>
 
-                            <input class="input" v-if="task === editingTask" v-autofocus @keyup.enter="endEditing(task)" @blur="endEditing(task)" type="text" placeholder="New task" v-model="task.body" required>
-                           <p>{{task.category }}</p>
+                            <input class="input" v-if="task === editingTask" v-autofocus @keyup.enter="endEditing(task)"
+                                   @blur="endEditing(task)" type="text" placeholder="New task" v-model="task.body" required>
+
+
+                            <select class='input' v-model="task.category_id" @change="updateTask(task,$event)" title="Edit Category">
+                                <option v-for='data in categories'
+                                        :value='data.id'
+                                        :selected="data.id == task.category_id">{{ data.name }}</option>
+                            </select>
                         </div>
 
                     </div>
@@ -88,6 +97,7 @@
             return {
                 categories: '',
                 selected: '',
+                selecetedCategory:'',
                 message: 'Double click for editing.',
                 list: [],
                 task: {
@@ -180,7 +190,32 @@
                 }).catch(err => {
                     console.log(err);
                 });
+            },
+
+            updateTask(task,event){
+              let url = 'tasks/update/'+task.id;
+                axios.patch(url,  {
+                    task: this.task,
+                    category_id: event.target.value
+                }).catch(err => {
+                    console.log(err);
+                });
             }
         }
     }
 </script>
+<style scoped>
+    .input{
+        margin:5px;
+    }
+    .editor{
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .editor:hover{
+        background: #d3d3d3;
+
+    }
+
+</style>

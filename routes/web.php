@@ -22,3 +22,4 @@ Route::post('delete_task/{id}', 'TaskController@destroy');
 Route::post('archive_task/{id}', 'TaskController@archive');
 Route::post('edit_task', 'TaskController@edit');
 Route::get('getCategories','CategoriesController@index');
+Route::patch('tasks/update/{task_id}', 'TaskController@update');

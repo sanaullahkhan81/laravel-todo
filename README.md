@@ -3,6 +3,8 @@
 ### Setup
 ```git clone https://github.com/sanaullahkhan81/laravel-todo```
 
+```cd laravel-tod```
+
 ###DB Setup
 Rename .env.excample to .env and add DB configurations
 

@@ -15,9 +15,11 @@ Rename .env.excample to .env and add DB configurations
 ### Migration and Seeders
 ```php artisan migrate:fresh --seed```
 
+```php artisan key:generate```
+
 ```php artisan serve```
 
-```npm run serve```
+```npm run watch```
 
 Visit url  ```http://127.0.0.1:8000/```
 
